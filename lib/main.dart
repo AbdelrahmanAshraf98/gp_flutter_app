@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gp_flutter_app/modules/login/login_screen.dart';
+import 'package:gp_flutter_app/modules/register/register_screen.dart';
 
 void main() => runApp(MyApp());
 
@@ -22,7 +23,7 @@ class MyApp extends StatelessWidget {
         )
       ),
       debugShowCheckedModeBanner: false,
-      home: LoginScreen(),
+      home: RegisterScreen(),
     );
   }
 }
