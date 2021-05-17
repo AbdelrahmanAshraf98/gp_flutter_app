@@ -1,7 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gp_flutter_app/modules/login/login_screen.dart';
+import 'package:gp_flutter_app/modules/medicine/medicine_screen.dart';
 import 'package:gp_flutter_app/modules/register/register_screen.dart';
+import 'package:gp_flutter_app/modules/welcome/welcome_screen.dart';
+
+import 'modules/chat/chat_screen.dart';
+import 'modules/medical_records/records_screen.dart';
+import 'modules/profile/Profile_screen.dart';
 
 void main() => runApp(MyApp());
 
@@ -12,18 +18,9 @@ class MyApp extends StatelessWidget {
       title: 'GP',
       theme: ThemeData(
         primaryColor: Color(0xff00B0FF),
-        appBarTheme: AppBarTheme(
-          elevation: 0.0,
-          color: Color(0xff00B0FF),
-          backwardsCompatibility: false,
-          systemOverlayStyle: SystemUiOverlayStyle(
-            statusBarColor: Color(0xff00B0FF),
-            statusBarIconBrightness: Brightness.light,
-          )
-        )
       ),
       debugShowCheckedModeBanner: false,
-      home: RegisterScreen(),
+      home: ProfileScreen(),
     );
   }
 }

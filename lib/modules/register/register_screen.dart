@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:gp_flutter_app/modules/login/login_screen.dart';
 import 'package:gp_flutter_app/shared/components/components.dart';
 import 'package:gp_flutter_app/shared/components/constants.dart';
 
@@ -29,7 +30,6 @@ class RegisterScreen extends StatelessWidget {
                 SizedBox(
                   height: 20.0,
                 ),
-
                 defaultTextField(
                   prefix: Icons.person_outline,
                   type: TextInputType.text,
@@ -86,7 +86,9 @@ class RegisterScreen extends StatelessWidget {
                       style: TextStyle(),
                     ),
                     TextButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          navigateTo(LoginScreen(), context);
+                        },
                         child: Text(
                           'Login Now',
                           style: TextStyle(

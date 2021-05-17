@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:gp_flutter_app/modules/register/register_screen.dart';
 import 'package:gp_flutter_app/shared/components/components.dart';
 import 'package:gp_flutter_app/shared/components/constants.dart';
 
@@ -65,7 +66,9 @@ class LoginScreen extends StatelessWidget {
                       style: TextStyle(),
                     ),
                     TextButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          navigateTo(RegisterScreen(),context);
+                        },
                         child: Text(
                           'Register Now',
                           style: TextStyle(

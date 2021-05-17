@@ -17,7 +17,10 @@ Widget defaultButton({
       ),
       child: MaterialButton(
         onPressed: function,
-        child: Text(text.toUpperCase()),
+        child: Text(
+          text.toUpperCase(),
+          style: TextStyle(color: Colors.white),
+        ),
       ),
     );
 
@@ -32,7 +35,8 @@ Widget defaultTextField({
   IconData suffix,
   @required Function validation,
 }) =>
-    Material(borderRadius: BorderRadius.circular(35.0),
+    Material(
+      borderRadius: BorderRadius.circular(35.0),
       elevation: 3,
       child: TextFormField(
         onFieldSubmitted: onSubmit,
@@ -49,10 +53,23 @@ Widget defaultTextField({
           prefixIcon: Icon(prefix),
           suffixIcon: suffix != null
               ? IconButton(
-            icon: Icon(suffix),
-            onPressed: suffixPressed,
-          )
+                  icon: Icon(suffix),
+                  onPressed: suffixPressed,
+                )
               : null,
         ),
       ),
     );
+
+navigateTo(Widget screen, context) => Navigator.push(
+    context,
+    MaterialPageRoute(
+      builder: (context) => screen,
+    ));
+navigateAndFinish(Widget screen, context) => Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(
+          builder: (context) => screen,
+        ), (route) {
+      return false;
+    });
