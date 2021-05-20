@@ -1,6 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 import 'constants.dart';
+
+void showToast({@required String msg, @required Color color}) {
+  Fluttertoast.showToast(
+      msg: msg,
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.BOTTOM,
+      timeInSecForIosWeb: 3,
+      backgroundColor: color,
+      textColor: Colors.white,
+      fontSize: 16.0);
+}
 
 Widget defaultButton({
   @required String text,
@@ -73,3 +85,62 @@ navigateAndFinish(Widget screen, context) => Navigator.pushAndRemoveUntil(
         ), (route) {
       return false;
     });
+
+Widget drawerMenu(context)=>Column(
+  children: [
+    DrawerHeader(
+      child: Padding(
+        padding: const EdgeInsets.all(10.0),
+        child: Container(
+          width: double.infinity,
+          height: double.infinity,
+          child: Column(
+            children: [
+              CircleAvatar(
+                radius: 35,
+                backgroundImage: AssetImage('assets/images/pp.jpg'),
+              ),
+              SizedBox(height: 10.0,),
+              Text(
+                'Abd Elrahman Ashraf',
+                style: TextStyle(
+                  fontWeight: FontWeight.w600,
+                  fontSize: 16.0,
+                  color: Colors.white,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+      decoration: BoxDecoration(color: Theme.of(context).primaryColor),
+    ),
+    ListTile(
+      onTap: (){},
+      leading: Icon(Icons.person),
+      title: Text('Profile'),
+    ),
+    ListTile(
+      onTap: (){},
+      leading: Icon(Icons.medical_services),
+      title: Text('My Medicines'),
+    ),
+    ListTile(
+      onTap: (){},
+      leading: Icon(Icons.device_thermostat),
+      title: Text('My Records'),
+    ),
+    ListTile(
+      onTap: (){},
+      leading: Icon(Icons.chat),
+      title: Text('Chat with doctor'),
+    ),
+    Spacer(),
+    ListTile(
+      onTap: (){},
+      leading: Icon(Icons.logout),
+      title: Text('Log Out'),
+    ),
+    SizedBox(height: 20.0,),
+  ],
+);

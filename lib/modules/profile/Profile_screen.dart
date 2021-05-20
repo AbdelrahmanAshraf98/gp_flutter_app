@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:gp_flutter_app/shared/components/components.dart';
 
 class ProfileScreen extends StatelessWidget {
   var searchController = TextEditingController();
@@ -17,7 +18,7 @@ class ProfileScreen extends StatelessWidget {
           statusBarIconBrightness: Brightness.light,
         ),
       ),
-      drawer: Drawer(),
+      drawer: Drawer(child: drawerMenu(context),),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
       ),
@@ -62,7 +63,8 @@ class ProfileScreen extends StatelessWidget {
                               Text(
                                 'Abd Elrahman Ashraf',
                                 style: TextStyle(
-                                    fontWeight: FontWeight.w600, fontSize: 16.0),
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 16.0),
                               ),
                               Text('Cairo'),
                             ],
@@ -114,7 +116,6 @@ class ProfileScreen extends StatelessWidget {
                         borderRadius: BorderRadius.circular(20),
                       ),
                       child: Row(
-
                         children: [
                           Container(
                             width: 150.0,
@@ -130,27 +131,45 @@ class ProfileScreen extends StatelessWidget {
                               ),
                             ),
                           ),
-                          SizedBox(width: 10.0,),
+                          SizedBox(
+                            width: 10.0,
+                          ),
                           Padding(
-                            padding: const EdgeInsets.only(top: 10.0,left: 5.0),
+                            padding:
+                                const EdgeInsets.only(top: 10.0, left: 5.0),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
                                   'Dawa Gamed',
-                                  style: TextStyle(fontWeight: FontWeight.w600, fontSize: 18.0),
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 18.0),
                                 ),
-                                SizedBox(height: 5.0,),
+                                SizedBox(
+                                  height: 5.0,
+                                ),
                                 Text(
                                   'Next Dose : 02:00 PM',
-                                  style: TextStyle(fontSize: 16.0,color: Colors.grey),
+                                  style: TextStyle(
+                                      fontSize: 16.0, color: Colors.grey),
                                 ),
-                                SizedBox(height: 5.0,),
+                                SizedBox(
+                                  height: 5.0,
+                                ),
                                 Row(
                                   children: [
-                                    Icon(Icons.edit,color: Colors.grey,),
-                                    SizedBox(width: 20.0,),
-                                    Icon(Icons.delete,color: Colors.grey,),
+                                    Icon(
+                                      Icons.edit,
+                                      color: Colors.grey,
+                                    ),
+                                    SizedBox(
+                                      width: 20.0,
+                                    ),
+                                    Icon(
+                                      Icons.delete,
+                                      color: Colors.grey,
+                                    ),
                                   ],
                                 )
                               ],
@@ -174,7 +193,6 @@ class ProfileScreen extends StatelessWidget {
                         borderRadius: BorderRadius.circular(20),
                       ),
                       child: Row(
-
                         children: [
                           Container(
                             width: 150.0,
@@ -183,34 +201,52 @@ class ProfileScreen extends StatelessWidget {
                               image: DecorationImage(
                                   fit: BoxFit.cover,
                                   image:
-                                  AssetImage('assets/images/medicine.jpg')),
+                                      AssetImage('assets/images/medicine.jpg')),
                               borderRadius: BorderRadius.only(
                                 topLeft: Radius.circular(20),
                                 bottomLeft: Radius.circular(20),
                               ),
                             ),
                           ),
-                          SizedBox(width: 10.0,),
+                          SizedBox(
+                            width: 10.0,
+                          ),
                           Padding(
-                            padding: const EdgeInsets.only(top: 10.0,left: 5.0),
+                            padding:
+                                const EdgeInsets.only(top: 10.0, left: 5.0),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
                                   'Dawa Gamed',
-                                  style: TextStyle(fontWeight: FontWeight.w600, fontSize: 18.0),
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 18.0),
                                 ),
-                                SizedBox(height: 5.0,),
+                                SizedBox(
+                                  height: 5.0,
+                                ),
                                 Text(
                                   'Next Dose : 02:00 PM',
-                                  style: TextStyle(fontSize: 16.0,color: Colors.grey),
+                                  style: TextStyle(
+                                      fontSize: 16.0, color: Colors.grey),
                                 ),
-                                SizedBox(height: 5.0,),
+                                SizedBox(
+                                  height: 5.0,
+                                ),
                                 Row(
                                   children: [
-                                    Icon(Icons.edit,color: Colors.grey,),
-                                    SizedBox(width: 20.0,),
-                                    Icon(Icons.delete,color: Colors.grey,),
+                                    Icon(
+                                      Icons.edit,
+                                      color: Colors.grey,
+                                    ),
+                                    SizedBox(
+                                      width: 20.0,
+                                    ),
+                                    Icon(
+                                      Icons.delete,
+                                      color: Colors.grey,
+                                    ),
                                   ],
                                 )
                               ],
@@ -234,7 +270,6 @@ class ProfileScreen extends StatelessWidget {
                         borderRadius: BorderRadius.circular(20),
                       ),
                       child: Row(
-
                         children: [
                           Container(
                             width: 150.0,
@@ -243,34 +278,52 @@ class ProfileScreen extends StatelessWidget {
                               image: DecorationImage(
                                   fit: BoxFit.cover,
                                   image:
-                                  AssetImage('assets/images/medicine.jpg')),
+                                      AssetImage('assets/images/medicine.jpg')),
                               borderRadius: BorderRadius.only(
                                 topLeft: Radius.circular(20),
                                 bottomLeft: Radius.circular(20),
                               ),
                             ),
                           ),
-                          SizedBox(width: 10.0,),
+                          SizedBox(
+                            width: 10.0,
+                          ),
                           Padding(
-                            padding: const EdgeInsets.only(top: 10.0,left: 5.0),
+                            padding:
+                                const EdgeInsets.only(top: 10.0, left: 5.0),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
                                   'Dawa Gamed',
-                                  style: TextStyle(fontWeight: FontWeight.w600, fontSize: 18.0),
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 18.0),
                                 ),
-                                SizedBox(height: 5.0,),
+                                SizedBox(
+                                  height: 5.0,
+                                ),
                                 Text(
                                   'Next Dose : 02:00 PM',
-                                  style: TextStyle(fontSize: 16.0,color: Colors.grey),
+                                  style: TextStyle(
+                                      fontSize: 16.0, color: Colors.grey),
                                 ),
-                                SizedBox(height: 5.0,),
+                                SizedBox(
+                                  height: 5.0,
+                                ),
                                 Row(
                                   children: [
-                                    Icon(Icons.edit,color: Colors.grey,),
-                                    SizedBox(width: 20.0,),
-                                    Icon(Icons.delete,color: Colors.grey,),
+                                    Icon(
+                                      Icons.edit,
+                                      color: Colors.grey,
+                                    ),
+                                    SizedBox(
+                                      width: 20.0,
+                                    ),
+                                    Icon(
+                                      Icons.delete,
+                                      color: Colors.grey,
+                                    ),
                                   ],
                                 )
                               ],
@@ -294,7 +347,6 @@ class ProfileScreen extends StatelessWidget {
                         borderRadius: BorderRadius.circular(20),
                       ),
                       child: Row(
-
                         children: [
                           Container(
                             width: 150.0,
@@ -303,34 +355,52 @@ class ProfileScreen extends StatelessWidget {
                               image: DecorationImage(
                                   fit: BoxFit.cover,
                                   image:
-                                  AssetImage('assets/images/medicine.jpg')),
+                                      AssetImage('assets/images/medicine.jpg')),
                               borderRadius: BorderRadius.only(
                                 topLeft: Radius.circular(20),
                                 bottomLeft: Radius.circular(20),
                               ),
                             ),
                           ),
-                          SizedBox(width: 10.0,),
+                          SizedBox(
+                            width: 10.0,
+                          ),
                           Padding(
-                            padding: const EdgeInsets.only(top: 10.0,left: 5.0),
+                            padding:
+                                const EdgeInsets.only(top: 10.0, left: 5.0),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
                                   'Dawa Gamed',
-                                  style: TextStyle(fontWeight: FontWeight.w600, fontSize: 18.0),
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 18.0),
                                 ),
-                                SizedBox(height: 5.0,),
+                                SizedBox(
+                                  height: 5.0,
+                                ),
                                 Text(
                                   'Next Dose : 02:00 PM',
-                                  style: TextStyle(fontSize: 16.0,color: Colors.grey),
+                                  style: TextStyle(
+                                      fontSize: 16.0, color: Colors.grey),
                                 ),
-                                SizedBox(height: 5.0,),
+                                SizedBox(
+                                  height: 5.0,
+                                ),
                                 Row(
                                   children: [
-                                    Icon(Icons.edit,color: Colors.grey,),
-                                    SizedBox(width: 20.0,),
-                                    Icon(Icons.delete,color: Colors.grey,),
+                                    Icon(
+                                      Icons.edit,
+                                      color: Colors.grey,
+                                    ),
+                                    SizedBox(
+                                      width: 20.0,
+                                    ),
+                                    Icon(
+                                      Icons.delete,
+                                      color: Colors.grey,
+                                    ),
                                   ],
                                 )
                               ],

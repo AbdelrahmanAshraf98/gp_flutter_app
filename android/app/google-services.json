@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "723107594879",
+    "project_id": "gp-2021-fb5fb",
+    "storage_bucket": "gp-2021-fb5fb.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:723107594879:android:7738753cd9eda41b95354a",
+        "android_client_info": {
+          "package_name": "com.example.gp_flutter_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "723107594879-uf1a3a6uei7f0754ute4kqa9jvnk762r.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBeUXms4n63FLiHvCbwPgZqqykO9m8tD1A"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "723107594879-uf1a3a6uei7f0754ute4kqa9jvnk762r.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
