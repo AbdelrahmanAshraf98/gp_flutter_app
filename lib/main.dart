@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gp_flutter_app/layout/home_layout.dart';
+import 'package:gp_flutter_app/modules/interactions_checker/interactions_checker_screen.dart';
 import 'package:gp_flutter_app/modules/login/login_screen.dart';
 import 'package:gp_flutter_app/modules/medicine/medicine_screen.dart';
 import 'package:gp_flutter_app/modules/register/register_screen.dart';
@@ -37,17 +39,23 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => AppCubit(),
+      create: (context) => AppCubit()..getUser(),
       child: BlocConsumer<AppCubit,AppStates>(
         listener:(context, state) {},
         builder: (context, state) {
           return MaterialApp(
             title: 'GP',
             theme: ThemeData(
-              primaryColor: Color(0xff00B0FF),
+                scaffoldBackgroundColor: Colors.white,
+                primaryColor: Color(0xff00B0FF),
+                bottomNavigationBarTheme: BottomNavigationBarThemeData(
+                  selectedItemColor: Color(0xff00B0FF),
+                  unselectedItemColor: Colors.grey,
+                  type: BottomNavigationBarType.fixed,
+                )
             ),
             debugShowCheckedModeBanner: false,
-            home: startScreen,
+            home: HomeLayout(),
           );
         },
       ),

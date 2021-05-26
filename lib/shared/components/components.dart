@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:gp_flutter_app/layout/cubit/cubit.dart';
 
 import 'constants.dart';
 
@@ -78,6 +79,7 @@ navigateTo(Widget screen, context) => Navigator.push(
     MaterialPageRoute(
       builder: (context) => screen,
     ));
+
 navigateAndFinish(Widget screen, context) => Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute(
@@ -86,61 +88,69 @@ navigateAndFinish(Widget screen, context) => Navigator.pushAndRemoveUntil(
       return false;
     });
 
-Widget drawerMenu(context)=>Column(
-  children: [
-    DrawerHeader(
-      child: Padding(
-        padding: const EdgeInsets.all(10.0),
-        child: Container(
-          width: double.infinity,
-          height: double.infinity,
-          child: Column(
-            children: [
-              CircleAvatar(
-                radius: 35,
-                backgroundImage: AssetImage('assets/images/pp.jpg'),
-              ),
-              SizedBox(height: 10.0,),
-              Text(
-                'Abd Elrahman Ashraf',
-                style: TextStyle(
-                  fontWeight: FontWeight.w600,
-                  fontSize: 16.0,
-                  color: Colors.white,
+Widget drawerMenu({context,@required String name ,@required String image}){
+  return Column(
+    children: [
+      DrawerHeader(
+        child: Padding(
+          padding: const EdgeInsets.all(10.0),
+          child: Container(
+            width: double.infinity,
+            height: double.infinity,
+            child: Column(
+              children: [
+                CircleAvatar(
+                  radius: 35,
+                  backgroundImage: NetworkImage(image),
                 ),
-              ),
-            ],
+                SizedBox(height: 10.0,),
+                Text(
+                  name,
+                  style: TextStyle(
+                    fontWeight: FontWeight.w600,
+                    fontSize: 16.0,
+                    color: Colors.white,
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
+        decoration: BoxDecoration(color: Theme.of(context).primaryColor),
       ),
-      decoration: BoxDecoration(color: Theme.of(context).primaryColor),
-    ),
-    ListTile(
-      onTap: (){},
-      leading: Icon(Icons.person),
-      title: Text('Profile'),
-    ),
-    ListTile(
-      onTap: (){},
-      leading: Icon(Icons.medical_services),
-      title: Text('My Medicines'),
-    ),
-    ListTile(
-      onTap: (){},
-      leading: Icon(Icons.device_thermostat),
-      title: Text('My Records'),
-    ),
-    ListTile(
-      onTap: (){},
-      leading: Icon(Icons.chat),
-      title: Text('Chat with doctor'),
-    ),
-    Spacer(),
-    ListTile(
-      onTap: (){},
-      leading: Icon(Icons.logout),
-      title: Text('Log Out'),
-    ),
-    SizedBox(height: 20.0,),
-  ],
-);
+      ListView(
+        physics: NeverScrollableScrollPhysics(),
+        shrinkWrap: true,
+        children: [
+          ListTile(
+            onTap: (){
+              AppCubit.get(context).drawerNavigation(1);
+            },
+            leading: Icon(Icons.person),
+            title: Text('Profile'),
+          ),
+          ListTile(
+            onTap: (){},
+            leading: Icon(Icons.medical_services),
+            title: Text('My Medicines'),
+          ),
+          ListTile(
+            onTap: (){},
+            leading: Icon(Icons.device_thermostat),
+            title: Text('My Records'),
+          ),
+          ListTile(
+            onTap: (){},
+            leading: Icon(Icons.chat),
+            title: Text('Chat with doctor'),
+          ),
+        ],
+      ),
+      ListTile(
+        onTap: (){},
+        leading: Icon(Icons.logout),
+        title: Text('Log Out'),
+      ),
+    ],
+  );
+}
