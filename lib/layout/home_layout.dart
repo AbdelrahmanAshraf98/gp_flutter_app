@@ -6,7 +6,7 @@ import 'package:gp_flutter_app/modules/chat/chat_screen.dart';
 import 'package:gp_flutter_app/modules/interactions_checker/interactions_checker_screen.dart';
 import 'package:gp_flutter_app/modules/profile/Profile_screen.dart';
 import 'package:gp_flutter_app/shared/components/components.dart';
-
+import 'package:gp_flutter_app/shared/components/constants.dart';
 import 'cubit/cubit.dart';
 import 'cubit/states.dart';
 
@@ -18,86 +18,43 @@ class HomeLayout extends StatelessWidget {
       builder: (context, state) {
         return ConditionalBuilder(
           condition: state is GetUserLoadingState,
-          builder:  (context) =>  Container(color:Colors.white,child: Center(child: CircularProgressIndicator(),)),
+          builder: (context) => Container(
+              color: Colors.white,
+              child: Center(
+                child: CircularProgressIndicator(),
+              )),
           fallback: (context) => Scaffold(
             appBar: AppBar(
+              title: Center(child: Text(AppCubit.get(context).titles[AppCubit.get(context).currentScreen],style: TextStyle(color: Colors.white),)),
               actions: [IconButton(icon: Icon(Icons.logout), onPressed: () {})],
               elevation: 0,
               backgroundColor: Theme.of(context).primaryColor,
               backwardsCompatibility: false,
               systemOverlayStyle: SystemUiOverlayStyle(
-                statusBarColor: Theme.of(context).primaryColor,
+                statusBarColor: kPrimary,
                 statusBarIconBrightness: Brightness.light,
               ),
             ),
-            drawer: Drawer(
-              child: Column(
-                children: [
-                  DrawerHeader(
-                    child: Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: Container(
-                        width: double.infinity,
-                        height: double.infinity,
-                        child: Column(
-                          children: [
-                            CircleAvatar(
-                              radius: 35,
-                              backgroundImage: NetworkImage(AppCubit.get(context).userModel.image),
-                            ),
-                            SizedBox(height: 10.0,),
-                            Text(
-                              AppCubit.get(context).userModel.name,
-                              style: TextStyle(
-                                fontWeight: FontWeight.w600,
-                                fontSize: 16.0,
-                                color: Colors.white,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    decoration: BoxDecoration(color: Theme.of(context).primaryColor),
-                  ),
-                  ListView(
-                    physics: NeverScrollableScrollPhysics(),
-                    shrinkWrap: true,
-                    children: [
-                      ListTile(
-                        onTap: (){
-                          navigateTo(ProfileScreen(), context);
-                        },
-                        leading: Icon(Icons.person),
-                        title: Text('Profile'),
-                      ),
-                      ListTile(
-                        onTap: (){},
-                        leading: Icon(Icons.medical_services),
-                        title: Text('My Medicines'),
-                      ),
-                      ListTile(
-                        onTap: (){},
-                        leading: Icon(Icons.device_thermostat),
-                        title: Text('My Records'),
-                      ),
-                      ListTile(
-                        onTap: (){
-                          navigateTo(ChatScreen(), context);
-                        },
-                        leading: Icon(Icons.chat),
-                        title: Text('Chat with doctor'),
-                      ),
-                    ],
-                  ),
-                  ListTile(
-                    onTap: (){},
-                    leading: Icon(Icons.logout),
-                    title: Text('Log Out'),
-                  ),
-                ],
-              ),),
-            body: InteractionCheckerScreen(),
+            backgroundColor: Colors.white,
+            drawer: drawerMenu(
+                image: AppCubit.get(context).userModel.image,
+                name: AppCubit.get(context).userModel.name,
+                context: context),
+            body: AppCubit.get(context).screens[AppCubit.get(context).currentScreen],
+            bottomNavigationBar: BottomNavigationBar(
+              onTap: (index) {
+                AppCubit.get(context).changeBottomNav(index);
+              },
+              currentIndex: AppCubit.get(context).currentScreen,
+              items: [
+                BottomNavigationBarItem(icon: Icon(Icons.person),label: 'Profile'),
+                BottomNavigationBarItem(icon: Icon(Icons.chat),label: 'Chat'),
+                BottomNavigationBarItem(icon: Icon(Icons.check_box),label: 'Checker'),
+                BottomNavigationBarItem(icon: Icon(Icons.article_rounded),label: 'Blog'),
+                BottomNavigationBarItem(icon: Icon(Icons.analytics),label: 'Records'),
+              ],
+            ),
+
           ),
         );
       },

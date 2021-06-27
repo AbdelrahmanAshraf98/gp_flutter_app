@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:gp_flutter_app/layout/cubit/cubit.dart';
-
+import 'package:gp_flutter_app/models/drug_model.dart';
+import 'package:gp_flutter_app/modules/medicine/medicine_screen.dart';
 import 'constants.dart';
 
 void showToast({@required String msg, @required Color color}) {
@@ -118,34 +118,35 @@ Widget drawerMenu({context,@required String name ,@required String image}){
         ),
         decoration: BoxDecoration(color: Theme.of(context).primaryColor),
       ),
-      ListView(
-        physics: NeverScrollableScrollPhysics(),
-        shrinkWrap: true,
-        children: [
-          ListTile(
-            onTap: (){
-              AppCubit.get(context).drawerNavigation(1);
-            },
-            leading: Icon(Icons.person),
-            title: Text('Profile'),
-          ),
-          ListTile(
-            onTap: (){},
-            leading: Icon(Icons.medical_services),
-            title: Text('My Medicines'),
-          ),
-          ListTile(
-            onTap: (){},
-            leading: Icon(Icons.device_thermostat),
-            title: Text('My Records'),
-          ),
-          ListTile(
-            onTap: (){},
-            leading: Icon(Icons.chat),
-            title: Text('Chat with doctor'),
-          ),
-        ],
-      ),
+      // ListView(
+      //   physics: NeverScrollableScrollPhysics(),
+      //   shrinkWrap: true,
+      //   children: [
+      //     ListTile(
+      //       onTap: (){
+      //         AppCubit.get(context).drawerNavigation(1);
+      //       },
+      //       leading: Icon(Icons.person),
+      //       title: Text('Profile'),
+      //     ),
+      //     ListTile(
+      //       onTap: (){},
+      //       leading: Icon(Icons.medical_services),
+      //       title: Text('My Medicines'),
+      //     ),
+      //     ListTile(
+      //       onTap: (){},
+      //       leading: Icon(Icons.device_thermostat),
+      //       title: Text('My Records'),
+      //     ),
+      //     ListTile(
+      //       onTap: (){},
+      //       leading: Icon(Icons.chat),
+      //       title: Text('Chat with doctor'),
+      //     ),
+      //   ],
+      // ),
+      Spacer(),
       ListTile(
         onTap: (){},
         leading: Icon(Icons.logout),
@@ -154,3 +155,84 @@ Widget drawerMenu({context,@required String name ,@required String image}){
     ],
   );
 }
+
+Widget drugCard(context,DrugModel model)=>Padding(
+  padding: const EdgeInsets.all(10.0),
+  child: Material(
+    borderRadius: BorderRadius.circular(20),
+    elevation: 3.0,
+    child: Container(
+      height: 110,
+      width: double.infinity,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: Row(
+        children: [
+          GestureDetector(
+            onTap: (){navigateTo(MedicineScreen(model), context);},
+            child: Container(
+              width: 150.0,
+              height: 110.0,
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                    fit: BoxFit.cover,
+                    image:
+                    NetworkImage(model.image)),
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(20),
+                  bottomLeft: Radius.circular(20),
+                ),
+              ),
+            ),
+          ),
+          SizedBox(
+            width: 10.0,
+          ),
+          Padding(
+            padding:
+            const EdgeInsets.only(top: 10.0, left: 5.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  model.name,
+                  style: TextStyle(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 18.0),
+                ),
+                SizedBox(
+                  height: 5.0,
+                ),
+                Text(
+                  'Next Dose : 02:00 PM',
+                  style: TextStyle(
+                      fontSize: 16.0, color: Colors.grey),
+                ),
+                SizedBox(
+                  height: 5.0,
+                ),
+                Row(
+                  children: [
+                    Icon(
+                      Icons.edit,
+                      color: Colors.grey,
+                    ),
+                    SizedBox(
+                      width: 20.0,
+                    ),
+                    Icon(
+                      Icons.delete,
+                      color: Colors.grey,
+                    ),
+                  ],
+                )
+              ],
+            ),
+          )
+        ],
+      ),
+    ),
+  ),
+);

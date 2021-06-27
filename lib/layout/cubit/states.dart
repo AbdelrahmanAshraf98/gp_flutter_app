@@ -4,6 +4,8 @@ class AppInitialState extends AppStates{}
 
 class DrawerNavigationState extends AppStates{}
 
+class BottomNavigationState extends AppStates{}
+
 class GetUserSuccessState extends AppStates{}
 
 class GetUserLoadingState extends AppStates{}
@@ -32,3 +34,12 @@ class GetMessagesSuccessState extends AppStates {}
 
 class GetMessagesErrorState extends AppStates {}
 
+class AddDrugSuccessState extends AppStates {}
+
+class AddDrugErrorState extends AppStates {}
+
+class GetDrugsLoadingState extends AppStates {}
+
+class GetDrugsSuccessState extends AppStates {}
+
+class GetDrugsErrorState extends AppStates {}

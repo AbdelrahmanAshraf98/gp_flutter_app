@@ -27,7 +27,7 @@ void main() async{
   uId = CacheHelper.getData(key: 'uId');
   Widget startScreen;
   if(uId != null)
-    startScreen = ProfileScreen();
+    startScreen = HomeLayout();
   else
     startScreen = LoginScreen();
   runApp(MyApp(startScreen));
@@ -55,7 +55,7 @@ class MyApp extends StatelessWidget {
                 )
             ),
             debugShowCheckedModeBanner: false,
-            home: HomeLayout(),
+            home: startScreen,
           );
         },
       ),

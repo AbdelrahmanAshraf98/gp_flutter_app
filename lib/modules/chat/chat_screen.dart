@@ -17,118 +17,104 @@ class ChatScreen extends StatelessWidget {
         listener: (context, state) {},
         builder: (context, state) {
           var messages = AppCubit.get(context).messages;
-          return Scaffold(
-            appBar: AppBar(
-              toolbarHeight: 60,
-              elevation: 0,
-              centerTitle: true,
-              title: Text('Chat With Doctor'),
-              backgroundColor: Theme.of(context).primaryColor,
-              backwardsCompatibility: false,
-              systemOverlayStyle: SystemUiOverlayStyle(
-                statusBarColor: Theme.of(context).primaryColor,
-                statusBarIconBrightness: Brightness.light,
-              ),
-            ),
-            body: Padding(
-              padding: const EdgeInsets.only(right: 15.0 , left: 15.0,top: 10.0,bottom: 10.0),
-              child: Column(
-                children: [
-                  Expanded(
-                    child: ListView.separated(
-                      controller: scrollController,
-                      shrinkWrap: true,
-                      physics: BouncingScrollPhysics(),
-                      itemBuilder: (context, index) {
-                        if (messages[index].senderID != uId)
-                          return bubble(
-                            messages[index].text,
-                            messages[index].image,
-                            context,
-                          );
-                        return myBubble(
+          return Padding(
+            padding: const EdgeInsets.only(right: 15.0 , left: 15.0,top: 10.0,bottom: 10.0),
+            child: Column(
+              children: [
+                Expanded(
+                  child: ListView.separated(
+                    controller: scrollController,
+                    shrinkWrap: true,
+                    physics: BouncingScrollPhysics(),
+                    itemBuilder: (context, index) {
+                      if (messages[index].senderID != uId)
+                        return bubble(
                           messages[index].text,
                           messages[index].image,
                           context,
                         );
-                      },
-                      separatorBuilder: (context, index) => SizedBox(
-                        height: 10.0,
-                      ),
-                      itemCount: messages.length,
+                      return myBubble(
+                        messages[index].text,
+                        messages[index].image,
+                        context,
+                      );
+                    },
+                    separatorBuilder: (context, index) => SizedBox(
+                      height: 10.0,
                     ),
+                    itemCount: messages.length,
                   ),
-                  if(state is ChatImageUploadLoadingState)
+                ),
+                if(state is ChatImageUploadLoadingState)
                   Padding(
                     padding: const EdgeInsets.only(bottom: 8.0),
                     child: LinearProgressIndicator(),
                   ),
-                  //message text field
-                  Padding(
-                    padding: const EdgeInsets.only(top : 8.0),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Expanded(
-                          child: Material(
-                            borderRadius: BorderRadius.circular(35.0),
-                            elevation: 3,
-                            child: Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 8.0),
-                              child: TextFormField(
-                                controller: msgController,
-                                keyboardType: TextInputType.text,
-                                decoration: InputDecoration(
-                                  // suffix: IconButton(onPressed: (){},icon: Icon(Icons.camera_alt_outlined),color: kPrimary,),
-                                  hintText: '  Type Your Message....',
-                                  enabledBorder: InputBorder.none,
-                                  focusedBorder: InputBorder.none,
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(35.0),
-                                  ),
+                //message text field
+                Padding(
+                  padding: const EdgeInsets.only(top : 8.0),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Expanded(
+                        child: Material(
+                          borderRadius: BorderRadius.circular(35.0),
+                          elevation: 3,
+                          child: Padding(
+                            padding:
+                            const EdgeInsets.symmetric(horizontal: 8.0),
+                            child: TextFormField(
+                              controller: msgController,
+                              keyboardType: TextInputType.text,
+                              decoration: InputDecoration(
+                                // suffix: IconButton(onPressed: (){},icon: Icon(Icons.camera_alt_outlined),color: kPrimary,),
+                                hintText: '  Type Your Message....',
+                                enabledBorder: InputBorder.none,
+                                focusedBorder: InputBorder.none,
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(35.0),
                                 ),
                               ),
                             ),
                           ),
                         ),
-                        IconButton(
-                            onPressed: () {
-                              AppCubit.get(context).getChatImageGallery();
-                            },
-                            icon: Icon(
-                              Icons.camera_alt_outlined,
-                              color: kPrimary,
-                            )),
-                        SizedBox(
-                          width: 5.0,
-                        ),
-                        InkWell(
-                          onTap: () {
-                            if (msgController.text != '' || AppCubit.get(context).chatImageUrl != null)
-                              AppCubit.get(context).sendMessage(
-                                dateTime: DateTime.now().toString(),
-                                text: msgController.text,
-                                image: AppCubit.get(context).chatImageUrl,
-                                receiverID: 'admin',
-                              );
-                            msgController.clear();
-                            scrollController.jumpTo(scrollController.position.maxScrollExtent);
+                      ),
+                      IconButton(
+                          onPressed: () {
+                            AppCubit.get(context).getChatImageGallery();
                           },
-                          child: CircleAvatar(
-                            backgroundColor: state is ChatImageUploadLoadingState?Colors.grey:Theme.of(context).primaryColor,
-                            radius: 25,
-                            child: Icon(
-                              Icons.send,
-                              color: Colors.white,
-                            ),
+                          icon: Icon(
+                            Icons.camera_alt_outlined,
+                            color: kPrimary,
+                          )),
+                      SizedBox(
+                        width: 5.0,
+                      ),
+                      InkWell(
+                        onTap: () {
+                          if (msgController.text != '' || AppCubit.get(context).chatImageUrl != null)
+                            AppCubit.get(context).sendMessage(
+                              dateTime: DateTime.now().toString(),
+                              text: msgController.text,
+                              image: AppCubit.get(context).chatImageUrl,
+                              receiverID: 'admin',
+                            );
+                          msgController.clear();
+                          scrollController.jumpTo(scrollController.position.maxScrollExtent);
+                        },
+                        child: CircleAvatar(
+                          backgroundColor: state is ChatImageUploadLoadingState?Colors.grey:Theme.of(context).primaryColor,
+                          radius: 25,
+                          child: Icon(
+                            Icons.send,
+                            color: Colors.white,
                           ),
-                        )
-                      ],
-                    ),
+                        ),
+                      )
+                    ],
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           );
         },

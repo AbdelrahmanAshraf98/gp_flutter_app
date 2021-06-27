@@ -1,10 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:gp_flutter_app/models/drug_model.dart';
 import 'package:gp_flutter_app/shared/components/components.dart';
 
 class MedicineScreen extends StatelessWidget {
+  final DrugModel model;
+
+  const MedicineScreen(this.model) ;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        elevation:0,
+        actions: [
+          IconButton(onPressed: (){}, icon: Icon(Icons.delete,color: Colors.white,)),
+          IconButton(onPressed: (){}, icon:  Icon(Icons.edit,color: Colors.white,)),
+        ],
+      ),
       body: SingleChildScrollView(
         child: Column(
           children: [
@@ -20,7 +32,7 @@ class MedicineScreen extends StatelessWidget {
                   ),
                   image: DecorationImage(
                       fit: BoxFit.cover,
-                      image: AssetImage('assets/images/medicine.jpg')),
+                      image: NetworkImage(model.image)),
                 ),
               ),
               Container(
@@ -30,15 +42,7 @@ class MedicineScreen extends StatelessWidget {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Icon(Icons.arrow_back_ios_outlined,color: Colors.white,),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          Icon(Icons.delete,color: Colors.white,),
-                          SizedBox(width: 10.0,),
-                          Icon(Icons.edit,color: Colors.white,),
-                        ],
-                      ),
+
                     ],
                   ),
                 )
@@ -54,12 +58,12 @@ class MedicineScreen extends StatelessWidget {
                     height: 30.0,
                   ),
                   Text(
-                    'Dawa Gamed',
+                    model.name,
                     style: TextStyle(fontWeight: FontWeight.w600, fontSize: 20.0),
                   ),
                   SizedBox(height: 10.0,),
                   Text(
-                    'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+                    model.text,
                     style: TextStyle(fontSize: 16.0),
                   ),
                   SizedBox(height: 40.0,),

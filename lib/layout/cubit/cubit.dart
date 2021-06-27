@@ -4,17 +4,19 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gp_flutter_app/layout/cubit/states.dart';
+import 'package:gp_flutter_app/models/drug_model.dart';
 import 'package:gp_flutter_app/models/message_model.dart';
 import 'package:gp_flutter_app/models/user_model.dart';
+import 'package:gp_flutter_app/modules/blog/blog_screen.dart';
 import 'package:gp_flutter_app/modules/chat/chat_screen.dart';
+import 'package:gp_flutter_app/modules/interactions_checker/interactions_checker_screen.dart';
 import 'package:gp_flutter_app/modules/medical_records/records_screen.dart';
 import 'package:gp_flutter_app/modules/profile/Profile_screen.dart';
 import 'package:gp_flutter_app/shared/components/constants.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 
-
-class AppCubit extends Cubit<AppStates>{
+class AppCubit extends Cubit<AppStates> {
   AppCubit() : super(AppInitialState());
 
   static AppCubit get(context) => BlocProvider.of(context);
@@ -23,32 +25,34 @@ class AppCubit extends Cubit<AppStates>{
 
   var picker = ImagePicker();
 
-
   List<Widget> screens = [
     ProfileScreen(),
-    //TODO::screen()
-    RecordsScreen(),
     ChatScreen(),
+    InteractionCheckerScreen(),
+    BlogScreen(),
+    RecordsScreen(),
+  ];
+  List<String> titles = [
+    'Profile',
+    'Chat With Dr',
+    'Interaction Checker',
+    'Blog',
+    'Records',
   ];
 
-  int currentScreen  = 0;
-  void drawerNavigation(int index){
-    print('Drawer:::::::::::::'+index.toString());
-      currentScreen = index;
-      emit(DrawerNavigationState());
+  int currentScreen = 0;
+  void changeBottomNav(int index) {
+    currentScreen = index;
+    emit(BottomNavigationState());
   }
 
-  void getUser(){
+  void getUser() {
     emit(GetUserLoadingState());
-    FirebaseFirestore.instance
-        .collection('users')
-        .doc(uId)
-        .get()
-        .then((value) {
-          userModel = UserModel.fromJson(value.data());
-       print(userModel.image);
-       emit(GetUserSuccessState());
-    }).catchError((error){
+    FirebaseFirestore.instance.collection('users').doc(uId).get().then((value) {
+      userModel = UserModel.fromJson(value.data());
+      print(userModel.image);
+      emit(GetUserSuccessState());
+    }).catchError((error) {
       emit(GetUserErrorState());
     });
   }
@@ -98,7 +102,7 @@ class AppCubit extends Cubit<AppStates>{
     String image,
   }) {
     MessageModel model =
-    MessageModel(text, receiverID, userModel.userID, dateTime,image);
+        MessageModel(text, receiverID, userModel.userID, dateTime, image);
     FirebaseFirestore.instance
         .collection('users')
         .doc(userModel.userID)
@@ -108,8 +112,7 @@ class AppCubit extends Cubit<AppStates>{
         .add(model.toMap())
         .then((value) {
       emit(SendMessageSuccessState());
-      if(chatImageUrl != null)
-        removeChatImage();
+      if (chatImageUrl != null) removeChatImage();
     }).catchError((error) {
       emit(SendMessageErrorState());
     });
@@ -142,11 +145,49 @@ class AppCubit extends Cubit<AppStates>{
       messages = [];
       event.docs.forEach((element) {
         messages.add(MessageModel.fromJson(element.data()));
-        print(element.data());
       });
       emit(GetMessagesSuccessState());
     });
   }
 
-}
+  void addDrug({
+    @required String text,
+  }) {
+    DrugModel model = DrugModel(text, null,
+        'https://www.health.qld.gov.au/__data/assets/image/0022/672052/varieties/385-md.jpg');
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(userModel.userID)
+        .collection('drugs')
+        .add(model.toMap())
+        .then((value) {
+      emit(AddDrugSuccessState());
+      if (chatImageUrl != null) removeChatImage();
+    }).catchError((error) {
+      emit(AddDrugErrorState());
+    });
+  }
 
+  List<DrugModel> drugs = [];
+  void getDrugs() {
+    emit(GetDrugsLoadingState());
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(userModel.userID)
+        .collection('drugs')
+        .get()
+        .then((value){
+              drugs = [];
+              print('---------------------------------------');
+              value.docs.forEach((element) {
+                drugs.add(DrugModel.fromJson(element.data()));
+                print('Drug :::::::: ' + element.data()['name']);
+              });
+              emit(GetDrugsSuccessState());
+            })
+        .catchError((error) {
+      emit(GetDrugsErrorState());
+      print('Error ::::::: ${error}');
+    });
+  }
+}
