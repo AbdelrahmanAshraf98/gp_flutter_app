@@ -121,7 +121,7 @@ class ProfileScreen extends StatelessWidget {
                                               if(nameController.text != '')
                                               {
                                                 AppCubit.get(context).addDrug(
-                                                    text: nameController.text);
+                                                    name: nameController.text);
                                                 nameController.clear();
                                                 AppCubit.get(context).getDrugs();
                                                 Navigator.pop(context);
@@ -151,7 +151,9 @@ class ProfileScreen extends StatelessWidget {
                         shrinkWrap: true,
                         physics: NeverScrollableScrollPhysics(),
                         itemBuilder: (context, index) => drugCard(
-                            context, AppCubit.get(context).drugs[index]),
+                            context, AppCubit.get(context).drugs[index],
+                            AppCubit.get(context).drugsID[index],
+                        ),
                         separatorBuilder: (context, index) => SizedBox(
                               height: 5.0,
                             ),

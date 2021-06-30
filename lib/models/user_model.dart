@@ -4,6 +4,7 @@ class UserModel {
   String age;
   String userID;
   String image;
+  String type;
 
 
   UserModel({
@@ -12,6 +13,7 @@ class UserModel {
     this.userID,
     this.image,
     this.age,
+    this.type,
   });
 
   UserModel.fromJson(Map<String, dynamic> json) {
@@ -20,6 +22,7 @@ class UserModel {
     userID = json['uID'];
     image = json['image'];
     age = json['age'];
+    type = json['type'];
   }
 
   Map<String, dynamic> toMap() {
@@ -29,6 +32,7 @@ class UserModel {
       'age': age,
       'uID': userID,
       'image':image,
+      'type':type,
     };
   }
 }

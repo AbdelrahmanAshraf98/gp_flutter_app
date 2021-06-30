@@ -14,6 +14,7 @@ class RegisterScreen extends StatelessWidget {
   var passwordController = TextEditingController();
   var nameController = TextEditingController();
   var ageController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
@@ -38,13 +39,16 @@ class RegisterScreen extends StatelessWidget {
                 child: SingleChildScrollView(
                   physics: BouncingScrollPhysics(),
                   child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Image(
                         image: AssetImage('assets/images/form.png'),
                       ),
-                      Text(
-                        'Register',
-                        style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold),
+                      Center(
+                        child: Text(
+                          'Register',
+                          style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold),
+                        ),
                       ),
                       SizedBox(
                         height: 20.0,
@@ -90,11 +94,41 @@ class RegisterScreen extends StatelessWidget {
                       SizedBox(
                         height: 20.0,
                       ),
+                      Material(
+                        elevation: 3.0,
+                        borderRadius: BorderRadius.circular(35.0),
+                        child: Container(
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 30.0),
+                            child: DropdownButton<String>(
+                                value: RegisterCubit.get(context).dropdownValue,
+                                icon: const Icon(Icons.arrow_downward),
+                                iconSize: 24,
+                                elevation: 16,
+                                style: const TextStyle(color: Colors.black),
+                                underline: Container(
+                                  height: 2,
+                                  color: kPrimary,
+                                ),
+                                onChanged: (String newValue) {
+                                  RegisterCubit.get(context).changeDropValue();
+                                  print(newValue);
+                                },
+                                items: [
+                              DropdownMenuItem(value:'user',child: Text('User')),
+                              DropdownMenuItem(value:'doctor',child: Text('Doctor')),
+                            ]),
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        height: 20.0,
+                      ),
                       defaultButton(
                         text: 'Register',
                         color: kPrimary,
                         function: () {
-                          RegisterCubit.get(context).userRegister(name:nameController.text, age: ageController.text ,email: emailController.text, password: passwordController.text);
+                          RegisterCubit.get(context).userRegister(name:nameController.text, age: ageController.text ,email: emailController.text, password: passwordController.text,type: RegisterCubit.get(context).dropdownValue);
                         },
                         radius: 0,
                       ),

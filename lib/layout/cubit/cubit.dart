@@ -6,15 +6,18 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gp_flutter_app/layout/cubit/states.dart';
 import 'package:gp_flutter_app/models/drug_model.dart';
 import 'package:gp_flutter_app/models/message_model.dart';
+import 'package:gp_flutter_app/models/post_model.dart';
 import 'package:gp_flutter_app/models/user_model.dart';
 import 'package:gp_flutter_app/modules/blog/blog_screen.dart';
 import 'package:gp_flutter_app/modules/chat/chat_screen.dart';
 import 'package:gp_flutter_app/modules/interactions_checker/interactions_checker_screen.dart';
 import 'package:gp_flutter_app/modules/medical_records/records_screen.dart';
 import 'package:gp_flutter_app/modules/profile/Profile_screen.dart';
+import 'package:gp_flutter_app/shared/components/components.dart';
 import 'package:gp_flutter_app/shared/components/constants.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
+import 'package:intl/intl.dart';
 
 class AppCubit extends Cubit<AppStates> {
   AppCubit() : super(AppInitialState());
@@ -151,10 +154,10 @@ class AppCubit extends Cubit<AppStates> {
   }
 
   void addDrug({
-    @required String text,
+    @required String name,
   }) {
-    DrugModel model = DrugModel(text, null,
-        'https://www.health.qld.gov.au/__data/assets/image/0022/672052/varieties/385-md.jpg');
+    DrugModel model = DrugModel(name,'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+        'https://www.health.qld.gov.au/__data/assets/image/0022/672052/varieties/385-md.jpg',null);
     FirebaseFirestore.instance
         .collection('users')
         .doc(userModel.userID)
@@ -169,7 +172,11 @@ class AppCubit extends Cubit<AppStates> {
   }
 
   List<DrugModel> drugs = [];
+  List<String> drugsID = [];
+  List<List<String>> dose = [];
+
   void getDrugs() {
+    print('hi');
     emit(GetDrugsLoadingState());
     FirebaseFirestore.instance
         .collection('users')
@@ -178,10 +185,13 @@ class AppCubit extends Cubit<AppStates> {
         .get()
         .then((value){
               drugs = [];
+              drugsID = [];
               print('---------------------------------------');
               value.docs.forEach((element) {
                 drugs.add(DrugModel.fromJson(element.data()));
-                print('Drug :::::::: ' + element.data()['name']);
+                drugsID.add(element.id);
+                print('Drug ID :::::::: ' + element.id);
+                print('Drug :::::::: ' + element.data().toString());
               });
               emit(GetDrugsSuccessState());
             })
@@ -190,4 +200,168 @@ class AppCubit extends Cubit<AppStates> {
       print('Error ::::::: ${error}');
     });
   }
+
+  void addDose({
+    @required String id,
+    @required DrugModel drug,
+  }) {
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(userModel.userID)
+        .collection('drugs')
+        .doc(id)
+        .set({
+      'dose': drug.dose,
+      'image':drug.image,
+      'text':drug.text,
+      'name':drug.name,
+    }).then((value) {
+      emit(AddDoseSuccessState());
+      getDrugs();
+    }).catchError((error) {
+      emit(AddDoseErrorState());
+    });
+  }
+
+  void deleteDrug({
+    @required String id,
+  }) {
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(userModel.userID)
+        .collection('drugs')
+        .doc(id)
+        .delete()
+        .then((value){
+          getDrugs();
+      emit(DeleteDrugSuccessState());
+    }).catchError((error) {
+      emit(DeleteDrugErrorState());
+    });
+  }
+
+  String nextDose(List<dynamic> dose){
+    for(int i = 0 ; i < dose.length ; i++) {
+      var now = DateFormat.jm().format(DateTime.now());
+      if(parseTime(now).compareTo(parseTime(dose[i]))<0){
+        print(dose[i]);
+        return dose[i];
+      }
+    }
+  }
+  String postImageUrl = '';
+  void uploadPostImage() {
+    emit(PostImageUploadLoadingState());
+    firebase_storage.FirebaseStorage.instance
+        .ref()
+        .child('posts/${Uri.file(postImage.path).pathSegments.last}')
+        .putFile(postImage)
+        .then((value) {
+      value.ref.getDownloadURL().then((value) {
+        emit(PostImageUploadSuccessState());
+        postImageUrl = value;
+        print(value);
+      }).catchError((onError) {
+        emit(PostImageUploadErrorState());
+      });
+    }).catchError((error) {
+      emit(PostImageUploadErrorState());
+    });
+  }
+
+  File postImage;
+  Future<void> getPostImage() async {
+    final pickedImage = await picker.getImage(source: ImageSource.gallery);
+    if (pickedImage != null) {
+      postImage = File(pickedImage.path);
+      emit(PostImagePickedSuccessState());
+      uploadPostImage();
+    } else {
+      emit(PostImagePickedErrorState());
+    }
+  }
+
+  void removePostImage() {
+    postImage = null;
+    emit(PostImageRemoveState());
+  }
+
+  void createNewPost({
+    @required String text,
+    @required String dateTime,
+  }) {
+    emit(CreatePostLoadingState());
+    print(userModel.image);
+    PostModel post = PostModel(
+      image: userModel.image,
+      name: userModel.name,
+      userID: uId,
+      text: text,
+      dateTime: dateTime,
+      postImage: postImageUrl != '' ? postImageUrl : null,
+    );
+    FirebaseFirestore.instance
+        .collection('posts')
+        .add(post.toMap())
+        .then((value) {
+      removePostImage();
+      emit(CreatePostSuccessState());
+      getPosts();
+    }).catchError((error) {
+      emit(CreatePostErrorState());
+    });
+  }
+
+  List<PostModel> posts = [];
+  List<String> postsID = [];
+  List<int> postsLikes = [];
+  List<int> postsComments = [];
+
+  void getPosts() {
+    emit(HomeGetPostsLoadingState());
+    posts = [];
+    postsID = [];
+    FirebaseFirestore.instance.collection('posts').get().then((value) {
+      value.docs.forEach((element) {
+        element.reference.collection('likes').get().then((value) {
+          postsLikes.add(value.docs.length);
+          posts.add(PostModel.fromJson(element.data()));
+          postsID.add(element.id);
+        });
+      });
+      emit(HomeGetPostsSuccessState());
+    }).catchError((error) {
+      emit(HomeGetPostsErrorState());
+    });
+  }
+
+  void likePost({String postId,int index}) {
+    FirebaseFirestore.instance
+        .collection('posts')
+        .doc(postId)
+        .collection('likes')
+        .doc(uId)
+        .set({'like': true}).then((value) {
+      postsLikes[index] +=1;
+      emit(LikePostSuccessState());
+    }).catchError((error) {
+      emit(LikePostErrorState());
+    });
+  }
+  void dislike({String postId,int index}) {
+    FirebaseFirestore.instance
+        .collection('posts')
+        .doc(postId)
+        .collection('likes')
+        .doc(uId)
+        .delete()
+        .then((value) {
+          if(postsLikes[index] != 0)
+            postsLikes[index] -=1;
+      emit(DisLikePostSuccessState());
+    }).catchError((error) {
+      emit(DisLikePostErrorState());
+    });
+  }
+
 }

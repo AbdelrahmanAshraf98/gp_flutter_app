@@ -16,6 +16,7 @@ class RegisterCubit extends Cubit<RegisterStates>{
   @required String password,
   @required String name,
   @required String age,
+  @required String type,
 })
   {
     emit(RegisterLoadingState());
@@ -24,7 +25,7 @@ class RegisterCubit extends Cubit<RegisterStates>{
         .then((value) {
       print(value.user.uid);
       emit(RegisterSuccessState(value.user.uid));
-      createUser(name: name ,email: email,uId:value.user.uid,age: age);
+      createUser(name: name ,email: email,uId:value.user.uid,age: age,type:type);
     }).catchError((error){
       emit(RegisterErrorState(error.toString()));
     });
@@ -35,14 +36,18 @@ class RegisterCubit extends Cubit<RegisterStates>{
     @required String email,
     @required String uId,
     @required String age,
+    @required String type,
   }) {
     emit(CreateUserLoadingState());
+    if(type == 'doctor')
+      name='Dr/ '+name;
     UserModel userModel = UserModel(
       email: email,
       name: name,
       age: age,
       userID: uId,
       image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRWVzMB3E95aVYeCB9XtBkPYLryqIC7NPIYYQ&usqp=CAU',
+      type: type,
     );
     FirebaseFirestore.instance
         .collection('users')
@@ -59,6 +64,15 @@ class RegisterCubit extends Cubit<RegisterStates>{
   changePasswordVisibility() {
     isPassword = !isPassword;
     emit(ChangeRegisterPasswordVisibilityState());
+  }
+
+  String dropdownValue = 'user';
+  changeDropValue(){
+    if(dropdownValue == 'user')
+      dropdownValue = 'doctor';
+    else
+      dropdownValue = 'user';
+    emit(ChangeDropValueSuccessState());
   }
 
 }

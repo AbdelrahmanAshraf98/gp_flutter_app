@@ -43,3 +43,44 @@ class GetDrugsLoadingState extends AppStates {}
 class GetDrugsSuccessState extends AppStates {}
 
 class GetDrugsErrorState extends AppStates {}
+
+class AddDoseSuccessState extends AppStates {}
+
+class AddDoseErrorState extends AppStates {}
+
+class DeleteDrugSuccessState extends AppStates {}
+
+class DeleteDrugErrorState extends AppStates {}
+
+class LikePostSuccessState extends AppStates {}
+
+class LikePostErrorState extends AppStates {}
+
+class DisLikePostSuccessState extends AppStates {}
+
+class DisLikePostErrorState extends AppStates {}
+
+class HomeGetPostsErrorState extends AppStates {}
+
+class HomeGetPostsSuccessState extends AppStates {}
+
+class HomeGetPostsLoadingState extends AppStates {}
+
+class CreatePostLoadingState extends AppStates {}
+
+class CreatePostSuccessState extends AppStates {}
+
+class CreatePostErrorState extends AppStates {}
+
+class PostImageRemoveState extends AppStates {}
+
+class PostImagePickedSuccessState extends AppStates {}
+
+class PostImagePickedErrorState extends AppStates {}
+
+class PostImageUploadLoadingState extends AppStates {}
+
+class PostImageUploadSuccessState extends AppStates {}
+
+class PostImageUploadErrorState extends AppStates {}
+

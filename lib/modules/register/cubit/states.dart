@@ -19,6 +19,8 @@ class RegisterLoadingState extends RegisterStates{}
 
 class CreateUserSuccessState extends RegisterStates{}
 
+class ChangeDropValueSuccessState extends RegisterStates{}
+
 class CreateUserLoadingState extends RegisterStates{}
 
 class CreateUserErrorState extends RegisterStates{}
