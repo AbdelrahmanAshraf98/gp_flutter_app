@@ -17,7 +17,7 @@ class HomeLayout extends StatelessWidget {
       listener: (context, state) {},
       builder: (context, state) {
         return ConditionalBuilder(
-          condition: state is GetUserLoadingState,
+          condition: state is GetUserLoadingState ,
           builder: (context) => Container(
               color: Colors.white,
               child: Center(
@@ -36,10 +36,6 @@ class HomeLayout extends StatelessWidget {
               ),
             ),
             backgroundColor: Colors.white,
-            drawer: drawerMenu(
-                image: AppCubit.get(context).userModel.image,
-                name: AppCubit.get(context).userModel.name,
-                context: context),
             body: AppCubit.get(context).screens[AppCubit.get(context).currentScreen],
             bottomNavigationBar: BottomNavigationBar(
               onTap: (index) {

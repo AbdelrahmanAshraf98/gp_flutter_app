@@ -1,3 +1,4 @@
+import 'package:firebase_mlkit_language/firebase_mlkit_language.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gp_flutter_app/layout/cubit/cubit.dart';
@@ -6,6 +7,7 @@ import 'package:gp_flutter_app/modules/new_post/new_post_screen.dart';
 import 'package:gp_flutter_app/shared/components/components.dart';
 
 class BlogScreen extends StatelessWidget {
+
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<AppCubit, AppStates>(
@@ -78,7 +80,8 @@ class BlogScreen extends StatelessWidget {
                     )),
               ListView.builder(
                 itemBuilder: (context, index) => buildPost(
-                    context, AppCubit.get(context).posts[index], index),
+                    context, AppCubit.get(context).posts[index],
+                    index,AppCubit.get(context).postsLang[index].toString()),
                 shrinkWrap: true,
                 physics: NeverScrollableScrollPhysics(),
                 itemCount: AppCubit.get(context).posts.length,

@@ -1,3 +1,4 @@
+import 'package:firebase_mlkit_language/firebase_mlkit_language.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gp_flutter_app/layout/cubit/cubit.dart';
@@ -228,8 +229,16 @@ Widget timeCard(String time) => Container(
         )),
       ),
     );
-
-Widget buildPost(context, PostModel model, int index) => Card(
+Future<String> checkLang(String text)async{
+  final LanguageIdentifier languageIdentifier = FirebaseLanguage.instance.languageIdentifier();
+  final List<LanguageLabel> labels = await languageIdentifier.processText(text);
+  for (LanguageLabel label in labels) {
+    final String text = label.languageCode;
+    final double confidence = label.confidence;
+  }
+  return labels[0].languageCode;
+}
+Widget buildPost(context, PostModel model, int index , String lang) => Card(
       margin: EdgeInsets.all(8.0),
       clipBehavior: Clip.antiAliasWithSaveLayer,
       elevation: 5.0,
@@ -297,8 +306,8 @@ Widget buildPost(context, PostModel model, int index) => Card(
             ),
             Text(
               model.text,
-              style: TextStyle(),
-              textDirection: TextDirection.rtl,
+              // textAlign: AppCubit.get(context).postsLang[index] == 'ar' ?TextAlign.right:TextAlign.left,
+              textDirection: AppCubit.get(context).postsLang[index].toString() == 'ar' ?TextDirection.ltr:TextDirection.rtl,
             ),
             if (model.postImage != null)
               Padding(
@@ -315,6 +324,15 @@ Widget buildPost(context, PostModel model, int index) => Card(
                   ),
                 ),
               ),
+            //separator
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 5.0),
+              child: Container(
+                height: 1.0,
+                width: double.infinity,
+                color: Colors.grey[300],
+              ),
+            ),
             //likes and comments
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 5.0),
@@ -335,7 +353,8 @@ Widget buildPost(context, PostModel model, int index) => Card(
                           style: Theme.of(context).textTheme.caption,
                         ),
                         Spacer(),
-                        InkWell(
+                        GestureDetector(
+                          
                           onTap: () {
                             AppCubit.get(context).likePost(
                                 postId: AppCubit.get(context).postsID[index],
@@ -345,7 +364,7 @@ Widget buildPost(context, PostModel model, int index) => Card(
                           child: Row(
                             children: [
                               Icon(
-                                Icons.favorite,
+                                Icons.thumb_up_rounded,
                                 color: Colors.grey,
                               ),
                               SizedBox(
@@ -388,16 +407,6 @@ Widget buildPost(context, PostModel model, int index) => Card(
                 ],
               ),
             ),
-            //separator
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 5.0),
-              child: Container(
-                height: 1.0,
-                width: double.infinity,
-                color: Colors.grey[300],
-              ),
-            ),
-            //write comment - like button
           ],
         ),
       ),
@@ -431,35 +440,35 @@ int parseTime(String time) {
   return hours * 100 + minutes;
 }
 
-int greater(String element, String element2) {
-  var hour = element.toString().split(':')[0];
-  var hour2 = element2.toString().split(':')[0];
-  var minute = element.toString().split(':')[1].split(' ')[0];
-  var minute2 = element2.toString().split(':')[1].split(' ')[0];
-  var day = element.toString().split(':')[1].split(' ')[1];
-  var day2 = element2.toString().split(':')[1].split(' ')[1];
-  if (day == 'AM' && day2 == 'PM')
-    return -1;
-  else if (day2 == 'AM' && day == 'PM')
-    return 1;
-  else if (day == day2) {
-    if (int.parse(hour) > int.parse(hour2))
-      return -1;
-    else if (int.parse(hour) < int.parse(hour2))
-      return 1;
-    else {
-      if (int.parse(minute) > int.parse(minute2))
-        return 1;
-      else
-        return -1;
-    }
-  }
-  // dose.forEach((element) {
-  //   print(element.toString().split(':')[0]);
-  //   print(element.toString().split(':')[1].split(' ')[0]);
-  //   print(element.toString().split(':')[1].split(' ')[1]);
-  // });
-}
+// int greater(String element, String element2) {
+//   var hour = element.toString().split(':')[0];
+//   var hour2 = element2.toString().split(':')[0];
+//   var minute = element.toString().split(':')[1].split(' ')[0];
+//   var minute2 = element2.toString().split(':')[1].split(' ')[0];
+//   var day = element.toString().split(':')[1].split(' ')[1];
+//   var day2 = element2.toString().split(':')[1].split(' ')[1];
+//   if (day == 'AM' && day2 == 'PM')
+//     return -1;
+//   else if (day2 == 'AM' && day == 'PM')
+//     return 1;
+//   else if (day == day2) {
+//     if (int.parse(hour) > int.parse(hour2))
+//       return -1;
+//     else if (int.parse(hour) < int.parse(hour2))
+//       return 1;
+//     else {
+//       if (int.parse(minute) > int.parse(minute2))
+//         return 1;
+//       else
+//         return -1;
+//     }
+//   }
+//   // dose.forEach((element) {
+//   //   print(element.toString().split(':')[0]);
+//   //   print(element.toString().split(':')[1].split(' ')[0]);
+//   //   print(element.toString().split(':')[1].split(' ')[1]);
+//   // });
+// }
 
 // void printo(DrugModel model) {
 //   print(model.dose);

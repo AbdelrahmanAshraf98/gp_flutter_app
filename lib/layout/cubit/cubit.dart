@@ -53,7 +53,6 @@ class AppCubit extends Cubit<AppStates> {
     emit(GetUserLoadingState());
     FirebaseFirestore.instance.collection('users').doc(uId).get().then((value) {
       userModel = UserModel.fromJson(value.data());
-      print(userModel.image);
       emit(GetUserSuccessState());
     }).catchError((error) {
       emit(GetUserErrorState());
@@ -71,7 +70,6 @@ class AppCubit extends Cubit<AppStates> {
       value.ref.getDownloadURL().then((value) {
         emit(ChatImageUploadSuccessState());
         chatImageUrl = value;
-        print(value);
       }).catchError((onError) {
         emit(ChatImageUploadErrorState());
       });
@@ -176,7 +174,6 @@ class AppCubit extends Cubit<AppStates> {
   List<List<String>> dose = [];
 
   void getDrugs() {
-    print('hi');
     emit(GetDrugsLoadingState());
     FirebaseFirestore.instance
         .collection('users')
@@ -186,11 +183,9 @@ class AppCubit extends Cubit<AppStates> {
         .then((value){
               drugs = [];
               drugsID = [];
-              print('---------------------------------------');
               value.docs.forEach((element) {
                 drugs.add(DrugModel.fromJson(element.data()));
                 drugsID.add(element.id);
-                print('Drug ID :::::::: ' + element.id);
                 print('Drug :::::::: ' + element.data().toString());
               });
               emit(GetDrugsSuccessState());
@@ -244,7 +239,6 @@ class AppCubit extends Cubit<AppStates> {
     for(int i = 0 ; i < dose.length ; i++) {
       var now = DateFormat.jm().format(DateTime.now());
       if(parseTime(now).compareTo(parseTime(dose[i]))<0){
-        print(dose[i]);
         return dose[i];
       }
     }
@@ -260,7 +254,6 @@ class AppCubit extends Cubit<AppStates> {
       value.ref.getDownloadURL().then((value) {
         emit(PostImageUploadSuccessState());
         postImageUrl = value;
-        print(value);
       }).catchError((onError) {
         emit(PostImageUploadErrorState());
       });
@@ -291,7 +284,6 @@ class AppCubit extends Cubit<AppStates> {
     @required String dateTime,
   }) {
     emit(CreatePostLoadingState());
-    print(userModel.image);
     PostModel post = PostModel(
       image: userModel.image,
       name: userModel.name,
@@ -315,17 +307,20 @@ class AppCubit extends Cubit<AppStates> {
   List<PostModel> posts = [];
   List<String> postsID = [];
   List<int> postsLikes = [];
-  List<int> postsComments = [];
+  List<String> postsLang = [];
 
   void getPosts() {
     emit(HomeGetPostsLoadingState());
     posts = [];
     postsID = [];
+    postsLikes = [];
+    postsLang = [];
     FirebaseFirestore.instance.collection('posts').get().then((value) {
       value.docs.forEach((element) {
         element.reference.collection('likes').get().then((value) {
           postsLikes.add(value.docs.length);
           posts.add(PostModel.fromJson(element.data()));
+          postsLang.add(checkLang(PostModel.fromJson(element.data()).text).toString());
           postsID.add(element.id);
         });
       });
@@ -342,8 +337,15 @@ class AppCubit extends Cubit<AppStates> {
         .collection('likes')
         .doc(uId)
         .set({'like': true}).then((value) {
-      postsLikes[index] +=1;
-      emit(LikePostSuccessState());
+      FirebaseFirestore.instance
+          .collection('posts')
+          .doc(postId)
+          .collection('likes')
+          .get()
+          .then((value) {
+            postsLikes[index] = value.docs.length;
+            emit(LikePostSuccessState());
+      });
     }).catchError((error) {
       emit(LikePostErrorState());
     });
@@ -356,9 +358,15 @@ class AppCubit extends Cubit<AppStates> {
         .doc(uId)
         .delete()
         .then((value) {
-          if(postsLikes[index] != 0)
-            postsLikes[index] -=1;
-      emit(DisLikePostSuccessState());
+      FirebaseFirestore.instance
+          .collection('posts')
+          .doc(postId)
+          .collection('likes')
+          .get()
+          .then((value) {
+        postsLikes[index] = value.docs.length;
+        emit(DisLikePostSuccessState());
+      });
     }).catchError((error) {
       emit(DisLikePostErrorState());
     });

@@ -15,8 +15,9 @@ class ProfileScreen extends StatelessWidget {
     return BlocConsumer<AppCubit, AppStates>(
       listener: (context, state) {},
       builder: (context, state) {
-        return SingleChildScrollView(
-          child: Stack(
+        return ConditionalBuilder(
+          condition: state is !GetDrugsLoadingState && state is !GetUserLoadingState,
+          builder:(context) => SingleChildScrollView(child: Stack(
             children: [
               Container(
                 decoration: BoxDecoration(
@@ -109,7 +110,7 @@ class ProfileScreen extends StatelessWidget {
                                           controller: nameController,
                                           label: 'Drug Name',
                                           prefix:
-                                              Icons.medical_services_outlined,
+                                          Icons.medical_services_outlined,
                                           type: TextInputType.name,
                                         ),
                                         SizedBox(
@@ -151,12 +152,12 @@ class ProfileScreen extends StatelessWidget {
                         shrinkWrap: true,
                         physics: NeverScrollableScrollPhysics(),
                         itemBuilder: (context, index) => drugCard(
-                            context, AppCubit.get(context).drugs[index],
-                            AppCubit.get(context).drugsID[index],
+                          context, AppCubit.get(context).drugs[index],
+                          AppCubit.get(context).drugsID[index],
                         ),
                         separatorBuilder: (context, index) => SizedBox(
-                              height: 5.0,
-                            ),
+                          height: 5.0,
+                        ),
                         itemCount: AppCubit.get(context).drugs.length),
                     fallback: (context) => Column(
                       children:[
@@ -170,7 +171,8 @@ class ProfileScreen extends StatelessWidget {
                 ],
               )
             ],
-          ),
+          )),
+          fallback:(context) => Center(child: CircularProgressIndicator(),),
         );
       },
     );

@@ -20,9 +20,7 @@ class DrugModel {
     image = json['image'];
     name = json['name'];
     dose = json['dose'];
-    print(dose);
     dose.sort((a, b) => parseTime(a).compareTo(parseTime(b)));
-    print(dose);
   }
 
   Map<String,dynamic> toMap(){
