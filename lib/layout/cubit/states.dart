@@ -84,3 +84,7 @@ class PostImageUploadSuccessState extends AppStates {}
 
 class PostImageUploadErrorState extends AppStates {}
 
+class SignOutLoadingState extends AppStates {}
+class SignOutSuccessState extends AppStates {}
+class SignOutErrorState extends AppStates {}
+

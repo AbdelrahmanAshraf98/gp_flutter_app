@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gp_flutter_app/layout/cubit/cubit.dart';
 import 'package:gp_flutter_app/layout/cubit/states.dart';
-import 'package:intl/intl.dart';
+import 'package:intl/intl.dart' as intl;
 
 class NewPostScreen extends StatelessWidget {
   var textController = TextEditingController();
@@ -25,7 +25,7 @@ class NewPostScreen extends StatelessWidget {
                       onPressed: () {
                         AppCubit.get(context).createNewPost(
                             text: textController.text,
-                            dateTime: DateFormat.jm().format(DateTime.now()));
+                            dateTime: DateTime.now().toString());
                         if (state is CreatePostSuccessState) {
                           textController.text = '';
                           Navigator.pop(context);
@@ -33,7 +33,7 @@ class NewPostScreen extends StatelessWidget {
                       },
                       child: Text(
                         'POST',
-                        style: TextStyle(color: Colors.blue),
+                        style: TextStyle(color: Colors.white),
                       )),
                 ),
               ]),
@@ -72,6 +72,7 @@ class NewPostScreen extends StatelessWidget {
                 ),
                 Expanded(
                   child: TextFormField(
+                    textDirection: TextDirection.rtl,
                     controller: textController,
                     textInputAction: TextInputAction.newline,
                     keyboardType: TextInputType.multiline,

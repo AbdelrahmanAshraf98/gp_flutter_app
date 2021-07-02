@@ -20,7 +20,8 @@ class DrugModel {
     image = json['image'];
     name = json['name'];
     dose = json['dose'];
-    dose.sort((a, b) => parseTime(a).compareTo(parseTime(b)));
+    if(dose != null)
+      dose.sort((a, b) => parseTime(a).compareTo(parseTime(b)));
   }
 
   Map<String,dynamic> toMap(){

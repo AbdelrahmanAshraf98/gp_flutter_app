@@ -4,10 +4,7 @@ class LoginInitialState extends LoginStates{}
 
 class LoginLoadingState extends LoginStates{}
 
-class LoginSuccessState extends LoginStates{
-  final String uId;
-  LoginSuccessState(this.uId);
-}
+class LoginSuccessState extends LoginStates{}
 
 class LoginErrorState extends LoginStates{
   final String error;
@@ -15,3 +12,9 @@ class LoginErrorState extends LoginStates{
 }
 
 class ChangePasswordVisibilityState extends LoginStates{}
+
+class GetUserSuccessState extends LoginStates{}
+
+class GetUserLoadingState extends LoginStates{}
+
+class GetUserErrorState extends LoginStates{}

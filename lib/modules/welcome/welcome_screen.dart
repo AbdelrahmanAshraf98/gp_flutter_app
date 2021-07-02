@@ -3,12 +3,14 @@ import 'package:flutter/services.dart';
 import 'package:gp_flutter_app/modules/login/login_screen.dart';
 import 'package:gp_flutter_app/modules/register/register_screen.dart';
 import 'package:gp_flutter_app/shared/components/components.dart';
+import 'package:gp_flutter_app/shared/network/local/cache_helper.dart';
 
 class WelcomeScreen extends StatelessWidget {
   const WelcomeScreen({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    CacheHelper.saveData(key: 'onBoard', value: true);
     return Scaffold(
       body: Stack(
         children: [

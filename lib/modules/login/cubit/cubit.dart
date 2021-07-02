@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gp_flutter_app/modules/login/cubit/states.dart';
+import 'package:gp_flutter_app/shared/components/constants.dart';
 
 class LoginCubit extends Cubit<LoginStates> {
   LoginCubit() : super(LoginInitialState());
@@ -18,7 +19,8 @@ class LoginCubit extends Cubit<LoginStates> {
         .signInWithEmailAndPassword(email: email, password: password)
         .then((value) {
       print(FirebaseAuth.instance.currentUser.email);
-      emit(LoginSuccessState(FirebaseAuth.instance.currentUser.uid));
+      uId = FirebaseAuth.instance.currentUser.uid;
+      emit(LoginSuccessState());
     })
         .catchError((error) {
       print(error.toString());
@@ -31,4 +33,5 @@ class LoginCubit extends Cubit<LoginStates> {
     isPassword = !isPassword;
     emit(ChangePasswordVisibilityState());
   }
+
 }

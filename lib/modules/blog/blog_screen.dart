@@ -7,7 +7,6 @@ import 'package:gp_flutter_app/modules/new_post/new_post_screen.dart';
 import 'package:gp_flutter_app/shared/components/components.dart';
 
 class BlogScreen extends StatelessWidget {
-
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<AppCubit, AppStates>(
@@ -81,7 +80,7 @@ class BlogScreen extends StatelessWidget {
               ListView.builder(
                 itemBuilder: (context, index) => buildPost(
                     context, AppCubit.get(context).posts[index],
-                    index,AppCubit.get(context).postsLang[index].toString()),
+                    index),
                 shrinkWrap: true,
                 physics: NeverScrollableScrollPhysics(),
                 itemCount: AppCubit.get(context).posts.length,

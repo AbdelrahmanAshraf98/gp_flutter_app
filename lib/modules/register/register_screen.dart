@@ -1,3 +1,4 @@
+import 'package:conditional_builder/conditional_builder.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -124,13 +125,25 @@ class RegisterScreen extends StatelessWidget {
                       SizedBox(
                         height: 20.0,
                       ),
-                      defaultButton(
-                        text: 'Register',
-                        color: kPrimary,
-                        function: () {
-                          RegisterCubit.get(context).userRegister(name:nameController.text, age: ageController.text ,email: emailController.text, password: passwordController.text,type: RegisterCubit.get(context).dropdownValue);
-                        },
-                        radius: 0,
+                      ConditionalBuilder(
+                        condition: state is! RegisterLoadingState,
+                        builder: (context) => defaultButton(
+                          text: 'Register',
+                          color: kPrimary,
+                          function: () {
+                            RegisterCubit.get(context).userRegister(
+                                name:nameController.text,
+                                age: ageController.text ,
+                                email: emailController.text,
+                                password: passwordController.text,
+                                type: RegisterCubit.get(context).dropdownValue,
+                            );
+                          },
+                          radius: 0,
+                        ),
+                        fallback: (context) => Center(
+                          child: CircularProgressIndicator(),
+                        ),
                       ),
                       SizedBox(
                         height: 20.0,

@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:bloc/bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gp_flutter_app/layout/cubit/states.dart';
@@ -11,10 +12,12 @@ import 'package:gp_flutter_app/models/user_model.dart';
 import 'package:gp_flutter_app/modules/blog/blog_screen.dart';
 import 'package:gp_flutter_app/modules/chat/chat_screen.dart';
 import 'package:gp_flutter_app/modules/interactions_checker/interactions_checker_screen.dart';
+import 'package:gp_flutter_app/modules/login/login_screen.dart';
 import 'package:gp_flutter_app/modules/medical_records/records_screen.dart';
 import 'package:gp_flutter_app/modules/profile/Profile_screen.dart';
 import 'package:gp_flutter_app/shared/components/components.dart';
 import 'package:gp_flutter_app/shared/components/constants.dart';
+import 'package:gp_flutter_app/shared/network/local/cache_helper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:intl/intl.dart';
@@ -25,9 +28,27 @@ class AppCubit extends Cubit<AppStates> {
   static AppCubit get(context) => BlocProvider.of(context);
 
   UserModel userModel;
+  int currentScreen = 0;
+  List<DrugModel> drugs = [];
+  List<String> drugsID = [];
+  List<List<String>> dose = [];
 
   var picker = ImagePicker();
 
+  Future<void> signOut() async {
+    emit(SignOutLoadingState());
+    await FirebaseAuth.instance.signOut().then((value) {
+      CacheHelper.removeData(key: 'uId');
+      uId = '';
+      userModel = null;
+      drugs = [];
+      drugsID = [];
+      currentScreen = 0;
+      emit(SignOutSuccessState());
+    }).catchError((error){
+      emit(SignOutErrorState());
+    });
+  }
   List<Widget> screens = [
     ProfileScreen(),
     ChatScreen(),
@@ -43,7 +64,6 @@ class AppCubit extends Cubit<AppStates> {
     'Records',
   ];
 
-  int currentScreen = 0;
   void changeBottomNav(int index) {
     currentScreen = index;
     emit(BottomNavigationState());
@@ -169,15 +189,11 @@ class AppCubit extends Cubit<AppStates> {
     });
   }
 
-  List<DrugModel> drugs = [];
-  List<String> drugsID = [];
-  List<List<String>> dose = [];
-
   void getDrugs() {
     emit(GetDrugsLoadingState());
     FirebaseFirestore.instance
         .collection('users')
-        .doc(userModel.userID)
+        .doc(uId)
         .collection('drugs')
         .get()
         .then((value){
@@ -236,12 +252,19 @@ class AppCubit extends Cubit<AppStates> {
   }
 
   String nextDose(List<dynamic> dose){
-    for(int i = 0 ; i < dose.length ; i++) {
-      var now = DateFormat.jm().format(DateTime.now());
-      if(parseTime(now).compareTo(parseTime(dose[i]))<0){
-        return dose[i];
-      }
+    if(dose != null) {
+        if(dose.length == 1 )
+          return dose[0];
+        else
+          for (int i = 0; i < dose.length; i++) {
+            var now = DateFormat.jm().format(DateTime.now());
+            if (parseTime(now).compareTo(parseTime(dose[i])) < 0) {
+              return dose[i];
+            }
+          }
+
     }
+    return '';
   }
   String postImageUrl = '';
   void uploadPostImage() {

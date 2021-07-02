@@ -1,6 +1,9 @@
+import 'package:conditional_builder/conditional_builder.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gp_flutter_app/layout/cubit/cubit.dart';
+import 'package:gp_flutter_app/layout/home_layout.dart';
 import 'package:gp_flutter_app/modules/login/cubit/cubit.dart';
 import 'package:gp_flutter_app/modules/login/cubit/states.dart';
 import 'package:gp_flutter_app/modules/profile/Profile_screen.dart';
@@ -16,14 +19,14 @@ class LoginScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => LoginCubit(),
-      child: BlocConsumer<LoginCubit,LoginStates>(
+      child: BlocConsumer<LoginCubit, LoginStates>(
         listener: (context, state) {
           if (state is LoginErrorState)
             showToast(msg: state.error, color: Colors.red);
           if (state is LoginSuccessState) {
             showToast(msg: 'Logged in successfully', color: Colors.green);
-            CacheHelper.saveData(key: 'uId', value: state.uId).then((value) {
-              navigateAndFinish(ProfileScreen(), context);
+            CacheHelper.saveData(key: 'uId', value: uId).then((value) {
+              navigateAndFinish(HomeLayout(), context);
             });
           }
         },
@@ -42,7 +45,8 @@ class LoginScreen extends StatelessWidget {
                       ),
                       Text(
                         'LOGIN',
-                        style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold),
+                        style: TextStyle(
+                            fontSize: 24.0, fontWeight: FontWeight.bold),
                       ),
                       SizedBox(
                         height: 20.0,
@@ -61,7 +65,9 @@ class LoginScreen extends StatelessWidget {
                         type: TextInputType.text,
                         label: 'Password',
                         controller: passwordController,
-                        suffix: LoginCubit.get(context).isPassword?Icons.remove_red_eye_outlined:Icons.visibility_off_outlined,
+                        suffix: LoginCubit.get(context).isPassword
+                            ? Icons.remove_red_eye_outlined
+                            : Icons.visibility_off_outlined,
                         suffixPressed: () {
                           LoginCubit.get(context).changePasswordVisibility();
                         },
@@ -70,13 +76,21 @@ class LoginScreen extends StatelessWidget {
                       SizedBox(
                         height: 20.0,
                       ),
-                      defaultButton(
-                        text: 'Login',
-                        color: kPrimary,
-                        function: () {
-                          LoginCubit.get(context).userLogin(email: emailController.text, password: passwordController.text);
-                        },
-                        radius: 0,
+                      ConditionalBuilder(
+                        condition: state is! LoginLoadingState,
+                        builder: (context) => defaultButton(
+                          text: 'Login',
+                          color: kPrimary,
+                          function: () {
+                            LoginCubit.get(context).userLogin(
+                                email: emailController.text,
+                                password: passwordController.text);
+                          },
+                          radius: 0,
+                        ),
+                        fallback: (context) => Center(
+                          child: CircularProgressIndicator(),
+                        ),
                       ),
                       SizedBox(
                         height: 20.0,
@@ -90,7 +104,7 @@ class LoginScreen extends StatelessWidget {
                           ),
                           TextButton(
                               onPressed: () {
-                                navigateAndFinish(RegisterScreen(),context);
+                                navigateAndFinish(RegisterScreen(), context);
                               },
                               child: Text(
                                 'Register Now',

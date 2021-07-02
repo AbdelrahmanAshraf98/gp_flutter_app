@@ -188,8 +188,9 @@ Widget drugCard(context, DrugModel model, String id) => Padding(
                       height: 5.0,
                     ),
                     Text(
+                      AppCubit.get(context).nextDose(model.dose) != ''?
                       'Next Dose : ' +
-                          AppCubit.get(context).nextDose(model.dose),
+                          AppCubit.get(context).nextDose(model.dose):'No Doses',
                       style: TextStyle(fontSize: 16.0, color: Colors.grey),
                     ),
                     SizedBox(
@@ -238,7 +239,7 @@ Future<String> checkLang(String text)async{
   }
   return labels[0].languageCode;
 }
-Widget buildPost(context, PostModel model, int index , String lang) => Card(
+Widget buildPost(context, PostModel model, int index ) => Card(
       margin: EdgeInsets.all(8.0),
       clipBehavior: Clip.antiAliasWithSaveLayer,
       elevation: 5.0,
@@ -307,7 +308,7 @@ Widget buildPost(context, PostModel model, int index , String lang) => Card(
             Text(
               model.text,
               // textAlign: AppCubit.get(context).postsLang[index] == 'ar' ?TextAlign.right:TextAlign.left,
-              textDirection: AppCubit.get(context).postsLang[index].toString() == 'ar' ?TextDirection.ltr:TextDirection.rtl,
+              textDirection:TextDirection.rtl,
             ),
             if (model.postImage != null)
               Padding(
@@ -353,8 +354,7 @@ Widget buildPost(context, PostModel model, int index , String lang) => Card(
                           style: Theme.of(context).textTheme.caption,
                         ),
                         Spacer(),
-                        GestureDetector(
-                          
+                        InkWell(
                           onTap: () {
                             AppCubit.get(context).likePost(
                                 postId: AppCubit.get(context).postsID[index],

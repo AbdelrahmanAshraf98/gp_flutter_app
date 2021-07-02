@@ -8,15 +8,15 @@ import 'package:gp_flutter_app/shared/components/components.dart';
 import 'package:gp_flutter_app/shared/components/constants.dart';
 
 class ProfileScreen extends StatelessWidget {
-  var nameController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     AppCubit.get(context).getDrugs();
+    var nameController = TextEditingController();
     return BlocConsumer<AppCubit, AppStates>(
       listener: (context, state) {},
       builder: (context, state) {
         return ConditionalBuilder(
-          condition: state is !GetDrugsLoadingState && state is !GetUserLoadingState,
+          condition: state is !GetDrugsLoadingState && state is !GetUserLoadingState && AppCubit.get(context).userModel !=null,
           builder:(context) => SingleChildScrollView(child: Stack(
             children: [
               Container(
