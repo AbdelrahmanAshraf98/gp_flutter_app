@@ -2,6 +2,7 @@ import 'package:conditional_builder/conditional_builder.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gp_flutter_app/layout/home_layout.dart';
 import 'package:gp_flutter_app/modules/login/login_screen.dart';
 import 'package:gp_flutter_app/modules/profile/Profile_screen.dart';
 import 'package:gp_flutter_app/modules/register/cubit/cubit.dart';
@@ -27,7 +28,7 @@ class RegisterScreen extends StatelessWidget {
           if (state is RegisterSuccessState) {
             showToast(msg: 'Account created successfully', color: Colors.green);
             CacheHelper.saveData(key: 'uId', value: state.uId).then((value) {
-              navigateAndFinish(ProfileScreen(), context);
+              navigateAndFinish(HomeLayout(), context);
             });
           }
         },

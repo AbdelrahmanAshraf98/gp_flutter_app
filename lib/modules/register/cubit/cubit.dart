@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gp_flutter_app/models/user_model.dart';
 import 'package:gp_flutter_app/modules/register/cubit/states.dart';
+import 'package:gp_flutter_app/shared/components/constants.dart';
 
 class RegisterCubit extends Cubit<RegisterStates>{
   RegisterCubit() : super(RegisterInitialState());
@@ -24,6 +25,7 @@ class RegisterCubit extends Cubit<RegisterStates>{
         .createUserWithEmailAndPassword(email: email, password: password)
         .then((value) {
       print(value.user.uid);
+      uId = FirebaseAuth.instance.currentUser.uid;
       emit(RegisterSuccessState(value.user.uid));
       createUser(name: name ,email: email,uId:value.user.uid,age: age,type:type);
     }).catchError((error){
@@ -40,20 +42,24 @@ class RegisterCubit extends Cubit<RegisterStates>{
   }) {
     emit(CreateUserLoadingState());
     if(type == 'doctor')
-      name='Dr/ '+name;
+      name = 'Dr/ '+name;
     UserModel userModel = UserModel(
       email: email,
       name: name,
       age: age,
       userID: uId,
-      image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRWVzMB3E95aVYeCB9XtBkPYLryqIC7NPIYYQ&usqp=CAU',
-      type: type,
+      image:
+      type == 'doctor'?
+      'https://image.freepik.com/free-photo/portrait-successful-mid-adult-doctor-with-crossed-arms_1262-12865.jpg'
+      :'https://image.freepik.com/free-photo/waist-up-portrait-handsome-serious-unshaven-male-keeps-hands-together-dressed-dark-blue-shirt-has-talk-with-interlocutor-stands-against-white-wall-self-confident-man-freelancer_273609-16320.jpg'
+      ,type: type,
     );
     FirebaseFirestore.instance
         .collection('users')
         .doc(uId)
         .set(userModel.toMap())
         .then((value) {
+      uId = FirebaseAuth.instance.currentUser.uid;
       emit(CreateUserSuccessState());
     }).catchError((error) {
       emit(CreateUserErrorState());

@@ -262,7 +262,6 @@ class AppCubit extends Cubit<AppStates> {
               return dose[i];
             }
           }
-
     }
     return '';
   }
