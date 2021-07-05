@@ -69,6 +69,8 @@ class HomeLayout extends StatelessWidget {
                 BottomNavigationBarItem(
                     icon: Icon(Icons.check_box), label: 'Checker'),
                 BottomNavigationBarItem(
+                    icon: Image.asset('assets/images/drug.png',height: 24.0,), label: 'Identifier'),
+                BottomNavigationBarItem(
                     icon: Icon(Icons.article_rounded), label: 'Blog'),
                 BottomNavigationBarItem(
                     icon: Icon(Icons.analytics), label: 'Records'),

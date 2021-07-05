@@ -10,6 +10,7 @@ import 'package:gp_flutter_app/shared/bloc_observer.dart';
 import 'package:gp_flutter_app/shared/components/constants.dart';
 import 'package:gp_flutter_app/shared/network/local/cache_helper.dart';
 import 'package:android_alarm_manager/android_alarm_manager.dart';
+import 'package:gp_flutter_app/shared/network/remote/dio_helper.dart';
 
 
 import 'layout/cubit/cubit.dart';
@@ -35,6 +36,7 @@ void main() async {
   await Firebase.initializeApp();
   await AndroidAlarmManager.initialize();
   await CacheHelper.init();
+  DioHelper.init();
   uId = CacheHelper.getData(key: 'uId');
   bool onBoarding = CacheHelper.getData(key: 'onBoard');
   Widget startScreen;

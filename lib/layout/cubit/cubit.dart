@@ -6,11 +6,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gp_flutter_app/layout/cubit/states.dart';
 import 'package:gp_flutter_app/models/drug_model.dart';
+import 'package:gp_flutter_app/models/identifier_model.dart';
 import 'package:gp_flutter_app/models/message_model.dart';
 import 'package:gp_flutter_app/models/post_model.dart';
 import 'package:gp_flutter_app/models/user_model.dart';
 import 'package:gp_flutter_app/modules/blog/blog_screen.dart';
 import 'package:gp_flutter_app/modules/chat/chat_screen.dart';
+import 'package:gp_flutter_app/modules/drug_identifier/drug_identifier.dart';
 import 'package:gp_flutter_app/modules/interactions_checker/interactions_checker_screen.dart';
 import 'package:gp_flutter_app/modules/login/login_screen.dart';
 import 'package:gp_flutter_app/modules/medical_records/records_screen.dart';
@@ -18,6 +20,7 @@ import 'package:gp_flutter_app/modules/profile/Profile_screen.dart';
 import 'package:gp_flutter_app/shared/components/components.dart';
 import 'package:gp_flutter_app/shared/components/constants.dart';
 import 'package:gp_flutter_app/shared/network/local/cache_helper.dart';
+import 'package:gp_flutter_app/shared/network/remote/dio_helper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:intl/intl.dart';
@@ -45,14 +48,16 @@ class AppCubit extends Cubit<AppStates> {
       drugsID = [];
       currentScreen = 0;
       emit(SignOutSuccessState());
-    }).catchError((error){
+    }).catchError((error) {
       emit(SignOutErrorState());
     });
   }
+
   List<Widget> screens = [
     ProfileScreen(),
     ChatScreen(),
     InteractionCheckerScreen(),
+    DrugIdentifier(),
     BlogScreen(),
     RecordsScreen(),
   ];
@@ -60,6 +65,7 @@ class AppCubit extends Cubit<AppStates> {
     'Profile',
     'Chat With Dr',
     'Interaction Checker',
+    'Drug Identifier',
     'Blog',
     'Records',
   ];
@@ -174,8 +180,11 @@ class AppCubit extends Cubit<AppStates> {
   void addDrug({
     @required String name,
   }) {
-    DrugModel model = DrugModel(name,'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-        'https://www.health.qld.gov.au/__data/assets/image/0022/672052/varieties/385-md.jpg',null);
+    DrugModel model = DrugModel(
+        name,
+        'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+        'https://www.health.qld.gov.au/__data/assets/image/0022/672052/varieties/385-md.jpg',
+        null);
     FirebaseFirestore.instance
         .collection('users')
         .doc(userModel.userID)
@@ -196,17 +205,16 @@ class AppCubit extends Cubit<AppStates> {
         .doc(uId)
         .collection('drugs')
         .get()
-        .then((value){
-              drugs = [];
-              drugsID = [];
-              value.docs.forEach((element) {
-                drugs.add(DrugModel.fromJson(element.data()));
-                drugsID.add(element.id);
-                print('Drug :::::::: ' + element.data().toString());
-              });
-              emit(GetDrugsSuccessState());
-            })
-        .catchError((error) {
+        .then((value) {
+      drugs = [];
+      drugsID = [];
+      value.docs.forEach((element) {
+        drugs.add(DrugModel.fromJson(element.data()));
+        drugsID.add(element.id);
+        print('Drug :::::::: ' + element.data().toString());
+      });
+      emit(GetDrugsSuccessState());
+    }).catchError((error) {
       emit(GetDrugsErrorState());
       print('Error ::::::: ${error}');
     });
@@ -223,9 +231,9 @@ class AppCubit extends Cubit<AppStates> {
         .doc(id)
         .set({
       'dose': drug.dose,
-      'image':drug.image,
-      'text':drug.text,
-      'name':drug.name,
+      'image': drug.image,
+      'text': drug.text,
+      'name': drug.name,
     }).then((value) {
       emit(AddDoseSuccessState());
       getDrugs();
@@ -243,28 +251,29 @@ class AppCubit extends Cubit<AppStates> {
         .collection('drugs')
         .doc(id)
         .delete()
-        .then((value){
-          getDrugs();
+        .then((value) {
+      getDrugs();
       emit(DeleteDrugSuccessState());
     }).catchError((error) {
       emit(DeleteDrugErrorState());
     });
   }
 
-  String nextDose(List<dynamic> dose){
-    if(dose != null) {
-        if(dose.length == 1 )
-          return dose[0];
-        else
-          for (int i = 0; i < dose.length; i++) {
-            var now = DateFormat.jm().format(DateTime.now());
-            if (parseTime(now).compareTo(parseTime(dose[i])) < 0) {
-              return dose[i];
-            }
+  String nextDose(List<dynamic> dose) {
+    if (dose != null) {
+      if (dose.length == 1)
+        return dose[0];
+      else
+        for (int i = 0; i < dose.length; i++) {
+          var now = DateFormat.jm().format(DateTime.now());
+          if (parseTime(now).compareTo(parseTime(dose[i])) < 0) {
+            return dose[i];
           }
+        }
     }
     return '';
   }
+
   String postImageUrl = '';
   void uploadPostImage() {
     emit(PostImageUploadLoadingState());
@@ -342,7 +351,8 @@ class AppCubit extends Cubit<AppStates> {
         element.reference.collection('likes').get().then((value) {
           postsLikes.add(value.docs.length);
           posts.add(PostModel.fromJson(element.data()));
-          postsLang.add(checkLang(PostModel.fromJson(element.data()).text).toString());
+          postsLang.add(
+              checkLang(PostModel.fromJson(element.data()).text).toString());
           postsID.add(element.id);
         });
       });
@@ -352,7 +362,7 @@ class AppCubit extends Cubit<AppStates> {
     });
   }
 
-  void likePost({String postId,int index}) {
+  void likePost({String postId, int index}) {
     FirebaseFirestore.instance
         .collection('posts')
         .doc(postId)
@@ -365,14 +375,15 @@ class AppCubit extends Cubit<AppStates> {
           .collection('likes')
           .get()
           .then((value) {
-            postsLikes[index] = value.docs.length;
-            emit(LikePostSuccessState());
+        postsLikes[index] = value.docs.length;
+        emit(LikePostSuccessState());
       });
     }).catchError((error) {
       emit(LikePostErrorState());
     });
   }
-  void dislike({String postId,int index}) {
+
+  void dislike({String postId, int index}) {
     FirebaseFirestore.instance
         .collection('posts')
         .doc(postId)
@@ -393,5 +404,48 @@ class AppCubit extends Cubit<AppStates> {
       emit(DisLikePostErrorState());
     });
   }
-
+  IdentifierModel identifierModel;
+  List<IdentifierModel> results = [];
+   int resultsCount;
+  void getPill({
+    @required String color,
+    @required String imprint,
+    @required String shape,
+}) {
+    emit(GetPillLoadingState());
+    DioHelper.getData(query: {
+      'color': color,
+      'imprint': imprint,
+      'shape' : shape,
+      'includeMpc': 'true'
+    }).then((value) {
+      results = [];
+      resultsCount = value.data['replyStatus']['imageCount'];
+      print(resultsCount);
+      value.data['nlmRxImages'].forEach((element){
+        identifierModel =  IdentifierModel(
+          element['name'],
+          element['imageUrl'],
+          element['mpc']['color'].toString().toLowerCase(),
+          element['labeler'],
+        );
+        results.add(identifierModel);
+      });
+      emit(GetPillSuccessState());
+    }).catchError((error) {
+      print('Error :::::::: ' + error.toString());
+      emit(GetPillErrorState());
+    });
+  }
+  String color = 'red';
+  void changeColor(String c) {
+    color = c;
+    emit(ChangeColorState());
+  }
+  String shape = 'round';
+  void changeShape(String s) {
+    shape = s;
+    emit(ChangeShapeState());
+  }
 }
+// https://rximage.nlm.nih.gov/api/rximage/1/rxnav?color=blue&imprint=93&name=Eszopiclone&includeMpc=true

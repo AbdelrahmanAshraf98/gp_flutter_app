@@ -41,7 +41,7 @@ class WelcomeScreen extends StatelessWidget {
                     height: 15.0,
                   ),
                   Text(
-                    'App Name',
+                    'DR.Drug',
                     style: TextStyle(
                         color: Colors.white,
                         fontSize: 24.0,
@@ -51,9 +51,9 @@ class WelcomeScreen extends StatelessWidget {
                     height: 15.0,
                   ),
                   Text(
-                    'App Slogan Here',
+                    'Your Drug Checker, Tracker And Advisor',
                     style: TextStyle(
-                        color: Colors.white, fontSize: 18.0, letterSpacing: 5),
+                        color: Colors.white, fontSize: 18.0,fontWeight: FontWeight.w600),
                   ),
                   SizedBox(
                     height: 50.0,
